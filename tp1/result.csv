@@ -1,0 +1,16 @@
+Query Number;Row Count;Query
+a1;272;SELECT id_viagem, origem_cidade, destino_cidade FROM trecho WHERE (transporte = 'Rodoviário')
+a2;641;SELECT id_pagamento, valor FROM pagamento WHERE (valor > 1000)
+a3;230;SELECT orgao.nome_orgao, pagamento.valor FROM pagamento FULL OUTER JOIN orgao WHERE(pagamento.id_orgao_superior = orgao.id_orgao AND pagamento.valor < 200)
+a4;61;SELECT viagem.id_viagem, trecho.sequencia_trecho, viagem.destino_viagem FROM viagem JOIN trecho ON viagem.id_viagem = trecho.id_viagem WHERE(trecho.sequencia_trecho = 5)
+a5;1124;SELECT id_pagamento, valor FROM pagamento JOIN viagem ON viagem.id_viagem = pagamento.id_viagem WHERE(viagem_urgente = 'SIM')
+q1;12;SELECT id_viagem, situacao, nome_viajante, data_inicio, data_fim, destino_viagem FROM viagem WHERE data_inicio BETWEEN '2022-01-09' AND '2022-01-16'
+q2;5;SELECT codigo_orgao, nome_orgao FROM orgao WHERE nome_orgao LIKE '%Nacional%'
+q3;42;SELECT nome_viajante, cargo_funcao_viajante FROM viagem WHERE UPPER(nome_viajante) LIKE '%SANTOS'
+q4;50;SELECT nome_viajante, valor_passagem FROM viagem v JOIN passagem p ON v.id_viagem = p.id_viagem WHERE p.ida_uf_origem = 'São Paulo' ORDER BY valor_passagem, nome_viajante LIMIT 50
+q5;12;SELECT orgao.nome_orgao AS orgao_superior, COUNT(viagem.id_viagem) AS quantidade_viagens_urgentes FROM pagamento JOIN viagem ON pagamento.id_viagem = viagem.id_viagem JOIN orgao ON pagamento.id_orgao_superior = orgao.id_orgao WHERE viagem.viagem_urgente = 'SIM' GROUP BY orgao.nome_orgao ORDER BY quantidade_viagens_urgentes ASC
+q6;18;SELECT viagem.id_viagem, SUM(pagamento.valor) as total_pagamento FROM viagem JOIN pagamento ON viagem.id_viagem = pagamento.id_viagem JOIN orgao ON viagem.id_orgao_solicitante = orgao.id_orgao WHERE orgao.codigo_orgao = 52000 GROUP BY viagem.id_viagem
+q7;2;SELECT v.id_viagem, MIN(p.valor_passagem) AS valor_passagem_mais_barata FROM viagem v JOIN passagem p ON v.id_viagem = p.id_viagem GROUP BY v.id_viagem HAVING COUNT(p.id_passagem) > 3
+q8;11;SELECT trecho.id_trecho FROM trecho JOIN viagem ON trecho.id_viagem = viagem.id_viagem WHERE trecho.origem_pais != 'Brasil' AND viagem.cargo_funcao_viajante LIKE '%MINISTRO%' ORDER BY trecho.id_trecho
+q9;10;SELECT DISTINCT o.nome_orgao FROM orgao o JOIN viagem v ON o.id_orgao = v.id_orgao_superior WHERE v.valor_diarias > 0 AND v.valor_diarias < 1000 ORDER BY o.nome_orgao
+q10;3;SELECT viagem.id_viagem, viagem.nome_viajante, (viagem.valor_diarias + viagem.valor_passagens + viagem.valor_devolucao + viagem.valor_outros_gastos) AS valor_total_pago_viagem FROM viagem JOIN trecho ON viagem.id_viagem = trecho.id_viagem WHERE trecho.transporte NOT IN ('Aéreo', 'Rodoviário') AND viagem.viagem_urgente = 'SIM' AND viagem.valor_diarias = 0 AND viagem.valor_devolucao = 0 AND viagem.valor_outros_gastos = 0 AND viagem.valor_passagens != 0 ORDER BY viagem.nome_viajante
